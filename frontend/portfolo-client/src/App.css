@@ -1,0 +1,37 @@
+/* Default Styles (for desktops and larger screens) */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+}
+
+/* Smartphones (Portrait and Landscape) */
+@media only screen and (max-width: 600px) {
+  body {
+    font-size: 14px;
+    background-color: #e22c2c;
+  }
+}
+
+/* Tablets (Portrait and Landscape) */
+@media only screen and (min-width: 601px) and (max-width: 1024px) {
+  body {
+    font-size: 16px;
+    background-color: #2c993e;
+  }
+}
+
+/* Laptops (Landscape) */
+@media only screen and (min-width: 1025px) and (max-width: 1440px) {
+  body {
+    font-size: 18px;
+    background-color: #6d2caa;
+  }
+}
+
+/* Desktops (Large screens) */
+@media only screen and (min-width: 1441px) {
+  body {
+    font-size: 20px;
+    background-color: #971561;
+  }
+}

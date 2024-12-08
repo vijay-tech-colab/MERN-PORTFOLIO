@@ -1,0 +1,4 @@
+backend/node_modules/
+backend/config/
+dashboard/dashboard/node_modules/
+frontend/portfolo-client/node_modules/
