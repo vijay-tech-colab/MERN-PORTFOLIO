@@ -1,3 +1,5 @@
+const { catchAsyncErrors } = require("../middlewares/catchAsyncError");
+
 exports.sendToken = (user, statusCode, res, message) => {
     const token = user.getJWTToken();
     const options = {
@@ -14,3 +16,4 @@ exports.sendToken = (user, statusCode, res, message) => {
         token,
     });
 };
+

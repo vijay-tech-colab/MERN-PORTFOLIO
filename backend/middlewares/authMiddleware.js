@@ -12,3 +12,5 @@ const authMiddleware = catchAsyncErrors(async (req,res,next) => {
     req.spesificUser = await User.findById(decoded.id);
     next();
 })
+
+module.exports = authMiddleware;
