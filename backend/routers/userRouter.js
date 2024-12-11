@@ -1,8 +1,11 @@
 const express = require('express');
 const authMiddleware = require('../middlewares/authMiddleware');
-const {register, loginUser, updateUser} = require('../controllers/userController');
+const {register, loginUser, updateUser, changePassword, forgotPassword, resetPassword} = require('../controllers/userController');
 const userRouter = express.Router();
 userRouter.post('/register',register);
 userRouter.post('/login',loginUser);
 userRouter.put('/update',authMiddleware,updateUser);
+userRouter.put('/change-password',authMiddleware,changePassword);
+userRouter.post('/forget-password',authMiddleware,forgotPassword);
+userRouter.post('/password-reset/:token',authMiddleware,resetPassword);
 module.exports = userRouter;

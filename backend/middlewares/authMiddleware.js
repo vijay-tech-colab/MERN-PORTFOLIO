@@ -9,7 +9,7 @@ const authMiddleware = catchAsyncErrors(async (req,res,next) => {
         return next(new ErrorHandler("UnAthorized user ?"));
     }
     const decoded = jwt.verify(token,process.env.JWT_SECRET_KEY);
-    req.spesificUser = await User.findById(decoded.id);
+    req.spesificUser = await User.findById(decoded.id).select("+password");
     next();
 })
 

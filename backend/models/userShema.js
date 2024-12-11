@@ -60,6 +60,8 @@ const UserSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    resetPasswordToken: String,
+    resetPasswordExpire: Date,
 });
 
 UserSchema.pre('save', async function (next) {
@@ -77,9 +79,8 @@ UserSchema.pre('save', async function (next) {
     }
 });
 
-UserSchema.methods.comparePassword = async function (enteredPassword) {
-    const isMathPassword = await bcrypt.compare(enteredPassword, this.password);
-    return isMathPassword
+UserSchema.methods.comparePassword = async function (candidatePassword) {
+    return await bcrypt.compare(candidatePassword, this.password);
 };
 
 UserSchema.methods.getJWTToken = function () {
