@@ -9,6 +9,22 @@ const bcrypt = require('bcrypt');
 
 exports.register = catchAsyncErrors(async (req, res, next) => {
     const { profilePicture } = req.files;
+    const {
+        name,
+        email,
+        password,
+        phone,
+        aboutMe,
+        facebook,
+        instagram,
+        portfolio,
+        twitter,
+        github
+    } = req.body;
+
+    if (!name || !email || !password || !aboutMe || !phone) {
+        return next(new ErrorHandler("All field requred !"));
+    }
 
     if (!req.files || Object.keys(req.files).length === 0) {
         return next(new ErrorHandler('Image required !', 400));
@@ -21,25 +37,12 @@ exports.register = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHandler('Cloudinary Error', 500));
     };
 
-    const {
-        name,
-        email,
-        password,
-        aboutMe,
-        facebook,
-        instagram,
-        portfolio,
-        twitter,
-        github
-    } = req.body;
-
-    if (!name || !email || !password || !aboutMe) {
-        return next(new ErrorHandler("All field requred !"));
-    }
+    
 
     const user = await User.create({
         name,
         email,
+        phone,
         password,
         aboutMe,
         profilePicture: {
@@ -56,7 +59,6 @@ exports.register = catchAsyncErrors(async (req, res, next) => {
 });
 
 //! LOGIN FUNCTINALITY USER
-
 exports.loginUser = catchAsyncErrors(async (req, res, next) => {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -81,6 +83,7 @@ exports.updateUser = catchAsyncErrors(async (req, res, next) => {
     const {
         name,
         email,
+        phone,
         aboutMe,
         facebook,
         instagram,
@@ -92,6 +95,7 @@ exports.updateUser = catchAsyncErrors(async (req, res, next) => {
     // Prepare the updated data object dynamically
     const updatedData = {};
     if (name) updatedData.name = name;
+    if (phone) updatedData.phone = phone;
     if (email) updatedData.email = email;
     if (aboutMe) updatedData.aboutMe = aboutMe;
     if (facebook) updatedData.facebook = facebook;
@@ -139,6 +143,8 @@ exports.updateUser = catchAsyncErrors(async (req, res, next) => {
     });
 });
 
+//! CHANGE PASSWORD FUNCTIONALITY
+
 exports.changePassword = catchAsyncErrors(async (req, res, next) => {
     const user = req.spesificUser;
     const { newPassword, oldPassword } = req.body;
@@ -154,13 +160,15 @@ exports.changePassword = catchAsyncErrors(async (req, res, next) => {
     user.password = newPassword;
     // user.password = await bcrypt.hash(newPassword,await bcrypt.genSalt(10));
     await user.save();
-    res.status(200).json({
-        success: true,
-        message: "Password Change successfully",
-    });
+    res.status(200).json(
+        {
+            success: true,
+            message: "Password Change successfully",
+        }
+    );
 });
 
-
+//! FORGET PASSWORD FUNCTIONALITY
 exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
 
     const { email } = req.body;
@@ -168,7 +176,7 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
     // Find the user by email
     const user = await User.findOne({ email }).select("+password");
     if (!user) {
-        return next(new ErrorHandler("User not found",400));
+        return next(new ErrorHandler("User not found", 400));
     }
 
     // Generate a reset token
@@ -193,34 +201,44 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
         message,
     });
 
-    res.status(200).json({ message: "Password reset email sent!" });
+    res.status(200).json(
+        {
+            success: true,
+            message: "Password reset email sent!"
+        }
+    );
 });
 
+//! RESET PASSWORD FUNCTIONALITY
+exports.resetPassword = catchAsyncErrors(async (req, res, next) => {
 
-exports.resetPassword = catchAsyncErrors(async (req, res,next) => {
-    
-      const { token } = req.params; // Token from the reset link
-      const { newPassword } = req.body;
-  
-      // Hash the token to compare with the stored hashed token
-      const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
-        console.log(hashedToken);
-      // Find the user with the token and check if the token is still valid
-      const user = await User.findOne({
+    const { token } = req.params; // Token from the reset link
+    const { newPassword } = req.body;
+
+    // Hash the token to compare with the stored hashed token
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+    console.log(hashedToken);
+    // Find the user with the token and check if the token is still valid
+    const user = await User.findOne({
         resetPasswordToken: hashedToken,
         resetPasswordExpire: { $gt: Date.now() }, // Check token expiry
-      });
-      
-      if (!user) {
-        return next(new ErrorHandler("Invalid or expired token",400));
-      }
-  
-      // Update the password
-      user.password = newPassword;
-      user.resetPasswordToken = undefined; // Remove token
-      user.resetPasswordExpire = undefined; // Remove expiry
-      await user.save();
-  
-      res.status(200).json({ message: "Password reset successful" });
-    
     });
+
+    if (!user) {
+        return next(new ErrorHandler("Invalid or expired token", 400));
+    }
+
+    // Update the password
+    user.password = newPassword;
+    user.resetPasswordToken = undefined; // Remove token
+    user.resetPasswordExpire = undefined; // Remove expiry
+    await user.save();
+
+    res.status(200).json(
+        {
+            success: true,
+            message: "Password reset successful"
+        }
+    );
+
+});

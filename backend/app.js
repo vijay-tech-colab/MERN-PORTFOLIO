@@ -4,6 +4,7 @@ const { errorMiddleware } = require('./middlewares/globleErrorHandler');
 const helmet = require('helmet');
 const fileUpload = require('express-fileupload');
 const userRouter = require('./routers/userRouter');
+const messageRouter = require('./routers/messageRouter');
 const app = express();
 require('dotenv').config({path : "./config/config.env"});
 app.use(cookieParser());
@@ -15,5 +16,6 @@ app.use(fileUpload({
     tempFileDir: "/tmp/",
 }))
 app.use("/api/v1/user",userRouter);
+app.use("/api/v1/message",messageRouter);
 app.use(errorMiddleware);
 module.exports = app;

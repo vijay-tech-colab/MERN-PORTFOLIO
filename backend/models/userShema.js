@@ -21,6 +21,10 @@ const UserSchema = new mongoose.Schema({
         required: true,
         select : false
     },
+    phone :{
+        required : [true,"Phone number is required !"],
+        type : String
+    },
     aboutMe: {
         type: String, // Add the 'About Me' field
         required: false, // Make it optional if desired
