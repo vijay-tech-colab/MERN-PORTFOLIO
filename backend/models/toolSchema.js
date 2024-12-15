@@ -16,10 +16,7 @@ const ToolSchema = new mongoose.Schema({
         required: true, // Category of the tool (e.g., "IDE", "Database", "Version Control")
         enum: ['IDE', 'Database', 'Version Control', 'Framework', 'Library', 'Other'], // Restrict categories
     },
-    version: {
-        type: String, // Version of the tool (e.g., "1.0.0")
-        required: false,
-    },
+
     officialLink: {
         type: String, // URL to the official tool website
         required: false,

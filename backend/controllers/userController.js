@@ -79,7 +79,7 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
 //! UPDATE USER DATA
 exports.updateUser = catchAsyncErrors(async (req, res, next) => {
     const user = req.spesificUser;
-    // console.log(data);
+    // (data);
     const {
         name,
         email,
@@ -126,8 +126,8 @@ exports.updateUser = catchAsyncErrors(async (req, res, next) => {
     }
     // Update the user in the database
     const updatedUser = await User.findByIdAndUpdate(user._id, updatedData);
-    console.log(updatedData)
-    console.log(updatedUser)
+    (updatedData)
+    (updatedUser)
     if (!updatedUser) {
         return res.status(500).json({
             success: false,
@@ -217,7 +217,7 @@ exports.resetPassword = catchAsyncErrors(async (req, res, next) => {
 
     // Hash the token to compare with the stored hashed token
     const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
-    console.log(hashedToken);
+    (hashedToken);
     // Find the user with the token and check if the token is still valid
     const user = await User.findOne({
         resetPasswordToken: hashedToken,

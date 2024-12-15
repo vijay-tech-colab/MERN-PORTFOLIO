@@ -79,7 +79,7 @@ UserSchema.pre('save', async function (next) {
         this.password = hashPasswoord;
         next();
     } catch (error) {
-        console.log(error);
+        (error);
     }
 });
 
